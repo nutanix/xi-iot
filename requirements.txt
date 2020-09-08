@@ -1,0 +1,6 @@
+tensorflow==1.13.1
+numpy>=1.16.2
+Pillow>=6.0.0
+elasticsearch>=7.0.0
+elasticsearch_dsl>=6.3.1
+msgpack_python>=0.5.6
