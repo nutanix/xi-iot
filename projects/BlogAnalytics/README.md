@@ -36,22 +36,22 @@ Here are components we will use to build the application:
 # Install prerequisites
 These are the prerequites required to follow the instructions in this document. Please follow the links provided to install them:
 * [Install Helm](https://helm.sh/docs/intro/install/)
-* [Install xi-iot CLI](https://github.com/nutanix/xi-iot/tree/master/cli)
+* [Install kps CLI](https://github.com/nutanix/xi-iot/tree/master/cli)
 * Install curl
 
-## Setup xi-iot CLI
-From your terminal window, create a Xi IoT context to associate with an existing Xi IoT user.
+## Setup kps CLI
+From your terminal window, create a Karbon Platform Services context to associate with an existing Karbon Platform Services user.
 ```
-$ xi-iot config create-context context_name --email user_email_address --password password
+$ kps config create-context context_name --email user_email_address --password password
 ```
 
-* context_name. A context name to associate with the specified user_email_address and related Xi IoT resources.
-* user_email_address. Email address of an existing Xi IoT user. This email address can be a My Nutanix account address or local user address.
-* password. Password for the Xi IoT user.
+* context_name. A context name to associate with the specified user_email_address and related Karbon Platform Services resources.
+* user_email_address. Email address of an existing Karbon Platform Services user. This email address can be a My Nutanix account address or local user address.
+* password. Password for the Karbon Platform Services user.
 
 Verify that the context is created and the current context is the one that was created above
 ```
-$ xi-iot config get-contexts
+$ kps config get-contexts
 ```
 
 ## Setup Project

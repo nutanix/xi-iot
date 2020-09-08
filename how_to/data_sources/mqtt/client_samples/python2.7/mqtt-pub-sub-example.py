@@ -1,7 +1,7 @@
 # Example code to connect, publish and subscribe from a mqtt client
 # For the example to work:
 # 1. create a dir named 'certs' under $PWD and copy the certs
-#    generated using Xi IoT SaaS Portal.
+#    generated using Karbon Platform Services SaaS Portal.
 # 2. Modify the 'broker_address' variable to point to the edge
 #    ip address that is being used for the tests.
 

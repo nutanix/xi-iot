@@ -1,6 +1,6 @@
 # Creating a Log Collector
 
-Read about log collectors details and requirements in the [Xi IoT Admin Guide](https://portal.nutanix.com/#/page/docs/details?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-logs-c.html).
+Read about log collectors details and requirements in the [Karbon Platform Services Admin Guide](https://portal.nutanix.com/#/page/docs/details?targetId=kps-Infra-Admin-Guide:edg-iot-logs-c.html).
 
 Each sample YAML file defines a log collector. Log collectors can be:
 - Infrastructure-based: collect infrastructure-related (service domain) information
@@ -21,7 +21,7 @@ You can connect each log collector to the destination cloud's logging infrastruc
 
 Create a log collector defined in a YAML file:
 
-`user@host$ xi-iot create -f log-collector.yaml`
+`user@host$ kps create -f log-collector.yaml`
 
 ### infra-logcollector-cloudwatch.yaml
 
@@ -45,7 +45,7 @@ filterSourceCode: ""
 | name                | `infra-log-name`                     | Specify the unique log collector name               |
 | type                | `infrastructure`                     | Log collector for infrastructure                    |
 | destination         | `cloudwatch`                         | Cloud destination type                              |
-| cloudProfile        | `cloud-profile-name`                 | Specify an existing Xi IoT cloud profile for AWS.   |
+| cloudProfile        | `cloud-profile-name`                 | Specify an existing Karbon Platform Services cloud profile for AWS.   |
 | awsRegion           | `monitoring.us-west-2.amazonaws.com` | A valid AWS region name or CloudWatch endpoint FQDN |
 | cloudwatchGroup     | `cloudwatch-group-name`              | Specify the AWS CloudWatch log group name           |
 | cloudwatchStream    | `cloudwatch-stream-name`             | Specify the AWS CloudWatch stream name              |
@@ -78,7 +78,7 @@ filterSourceCode: ""
 | name             | `infra-log-name`                     | Specify the unique log collector name             |
 | type             | `infrastructure`                     | Log collector for infrastructure                  |
 | destination      | `kinesis`                            | Cloud destination type                            |
-| cloudProfile     | `cloud-profile-name`                 | Specify an existing Xi IoT cloud profile for AWS. |
+| cloudProfile     | `cloud-profile-name`                 | Specify an existing Karbon Platform Services cloud profile for AWS. |
 | awsRegion        | `us-west-2`                          | A valid AWS region name                           |
 | kinesisStream    | `kinesis-stream-name`                | Specify the AWS Kinesis stream name               |
 | filterSourceCode | ` `                                  | Specify the log conversion code                   |
@@ -112,7 +112,7 @@ filterSourceCode: ""
 | type             | `project`                            | Log collector for specific project                       |
 | project          | `project-name`                       | Specify the project name                                 |
 | destination      | `firehose`                           | Cloud destination type                                   |
-| cloudProfile     | `cloud-profile-name`                 | Specify an existing Xi IoT cloud profile for AWS.        |
+| cloudProfile     | `cloud-profile-name`                 | Specify an existing Karbon Platform Services cloud profile for AWS.        |
 | awsRegion        | `us-west-2`                          | A valid AWS region name                                  |
 | kinesisStream    | `firehose-delivery-stream-name`      | Specify the delivery stream name                         |
 | filterSourceCode | ` `                                  | Specify the log conversion code                          |
@@ -145,7 +145,7 @@ filterSourceCode: ""
 | type             | `project`                            | Log collector for specific project                       |
 | project          | `project-name`                       | Specify the project name                                 |
 | destination      | `stackdriver`                        | Cloud destination type                                   |
-| cloudProfile     | `cloud-profile-name`                 | Specify an existing Xi IoT cloud profile for GCP.        |
+| cloudProfile     | `cloud-profile-name`                 | Specify an existing Karbon Platform Services cloud profile for GCP.        |
 | filterSourceCode | ` `                                  | Specify the log conversion code                          |
 
 The `stackdriver` integration does not require additional parameters.

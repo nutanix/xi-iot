@@ -3,7 +3,7 @@ In this part we will add debezium to the project to captures the events from the
 # Enabling Kafka
 Since Kafka is a managed service provided by XKS, there is no installing required, we only have to enable it via CLI.
 
-Create the xks manifest and apply it using the *xi-iot* CLI. Here we will enable Kafka service with default settings. For more details on custom setting please refer to the [Kafka Documentation](https://github.com/nutanix/xi-iot/tree/master/services/kafka)
+Create the xks manifest and apply it using the *kps* CLI. Here we will enable Kafka service with default settings. For more details on custom setting please refer to the [Kafka Documentation](https://github.com/nutanix/xi-iot/tree/master/services/kafka)
 
 [kafka-xks.yaml](kafka-xks.yaml)
 ```
@@ -16,13 +16,13 @@ serviceYaml: |
 ---
 Run the CLI
 ```
-$ xi-iot create -f kafka-xks.yaml
+$ kps create -f kafka-xks.yaml
 Successfully created service: Kafka
 ```
 
 Verify the installation
 ```
-$ xi-iot get service -p 'Blog Analytics' Kafka -o yaml
+$ kps get service -p 'Blog Analytics' Kafka -o yaml
 kind: service
 name: Kafka
 project: Blog Analytics

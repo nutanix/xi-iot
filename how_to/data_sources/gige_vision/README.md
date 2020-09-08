@@ -1,8 +1,8 @@
-# Using GigE Vision in Xi IoT
+# Using GigE Vision in Karbon Platform Services
 
 ## Data Source
-The following steps will show you how to set up a GigE Vision camera as a data source in Xi IoT:
-1. Log into the Xi IoT Cloud Management Console and click **Infrastructure** → **Data Sources**, and then **+Add Data Source**.
+The following steps will show you how to set up a GigE Vision camera as a data source in Karbon Platform Services:
+1. Log into the Karbon Platform Services Cloud Management Console and click **Infrastructure** → **Data Sources**, and then **+Add Data Source**.
 1. Complete information on the General tab and then click Next.
     * Name: enter a name for your camera
     * Associated edge: choose the edge that will connect to the camera feed

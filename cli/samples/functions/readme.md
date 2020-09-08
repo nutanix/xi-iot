@@ -1,6 +1,6 @@
 # Creating a Function
 
-Read more about function details and requirements in the [Xi IoT Admin Guide](https://portal.nutanix.com/#/page/docs/details?targetId=Xi-IoT-Infra-Admin-Guide:Xi-IoT-Infra-Admin-Guide).
+Read more about function details and requirements in the [Karbon Platform Services Admin Guide](https://portal.nutanix.com/page/documents/details?targetId=Karbon-Platform-Services-Admin-Guide:Karbon-Platform-Services-Admin-Guide).
 
 A function lets you run code on data flowing through a [Data Pipeline](../datapipelines). This code could be as simple as basic text processing function or it could be advanced code implementing artificial intelligence algorithms, leveraging popular machine learning frameworks like Tensorflow. Supported languages include Python, Golang, and Node.js.
 
@@ -8,13 +8,13 @@ A function lets you run code on data flowing through a [Data Pipeline](../datapi
 
 Create a function with parameters and other attributes defined in a YAML file.
 
-`user@host$ xi-iot create -f echo-with-param.yaml`
+`user@host$ kps create -f echo-with-param.yaml`
 
 ## echo-with-param.yaml
 
 This sample defines a function named `echo-param-fn` which accepts a parameter of type `string`.
 
-The Python script `echo.py` executes in the Python run-time environment `python-env` running on the Xi IoT edge and displays the string param onto stdout.
+The Python script `echo.py` executes in the Python run-time environment `python-env` running on the Karbon Platform Services edge and displays the string param onto stdout.
 
 
 ``` yaml
@@ -38,7 +38,7 @@ params:
 | description |     | Describe your function |
 | sourceCodePath |  | Specify the file system path for your function. This can be an absolute path or a path relative to location this echo-with-param.yaml file |
 | language |  | Here, `python`. Code language. Other languages include: <br /> `golang` for Golang <br /> `node`  for Node.js|
-| environment |  | Here, `python-env`. Run-time environment running on the Xi IoT edge. Other run-times include: <br /> `tensorflow-python` for Tensorflow <br /> `node-env` for Node.js <br /> `golang` for Golang |
+| environment |  | Here, `python-env`. Run-time environment running on the Karbon Platform Services edge. Other run-times include: <br /> `tensorflow-python` for Tensorflow <br /> `node-env` for Node.js <br /> `golang` for Golang |
 | params |  | Parameters to be passed into the function. These params can be different for different data pipelines. Please see how these are used in [data pipelines](../datapipelines) for more details |
 |  | name | Here, `param1`. Name of the parameter defined in your Python script |
 |  | type | A string that `echo.py` outputs or displays |
@@ -49,7 +49,7 @@ params:
 This sample defines a function named `object-detect-fn` which is associated with the Starter project. 
 
 The Python script `detect.py` detects objects in a given graphic frame or JPG format file.
-It executes in the Python run-time environment `tensorflow-python-env` running on the Xi IoT edge.
+It executes in the Python run-time environment `tensorflow-python-env` running on the Karbon Platform Services edge.
 
 ``` yaml
 kind: function

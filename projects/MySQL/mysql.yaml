@@ -1,0 +1,206 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bloganalytics-mysql
+  labels:
+    app: mysql
+    chart: mysql-6.10.4
+    release: bloganalytics
+    heritage: Tiller
+type: Opaque
+data:
+  mysql-root-password: "UjAwdE15c3Fs"
+  mysql-password: "d29yZHByZXNz"
+
+---
+# Source: mysql/templates/master-configmap.yaml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: bloganalytics-mysql-master
+  labels:
+    app: mysql
+    chart: mysql-6.10.4
+    release: bloganalytics
+    heritage: Tiller
+    component: master
+data:
+  my.cnf: |-
+    [mysqld]
+    default_authentication_plugin=mysql_native_password
+    skip-name-resolve
+    explicit_defaults_for_timestamp
+    basedir=/opt/bitnami/mysql
+    plugin_dir=/opt/bitnami/mysql/plugin
+    port=3306
+    socket=/opt/bitnami/mysql/tmp/mysql.sock
+    datadir=/bitnami/mysql/data
+    tmpdir=/opt/bitnami/mysql/tmp
+    max_allowed_packet=16M
+    bind-address=0.0.0.0
+    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+    log-error=/opt/bitnami/mysql/logs/mysqld.log
+    character-set-server=UTF8
+    collation-server=utf8_general_ci
+    
+    [client]
+    port=3306
+    socket=/opt/bitnami/mysql/tmp/mysql.sock
+    default-character-set=UTF8
+    plugin_dir=/opt/bitnami/mysql/plugin
+    
+    [manager]
+    port=3306
+    socket=/opt/bitnami/mysql/tmp/mysql.sock
+    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
+---
+# Source: mysql/templates/master-svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bloganalytics-mysql
+  labels:
+    app: mysql
+    chart: mysql-6.10.4
+    release: bloganalytics
+    heritage: Tiller
+    component: master
+  annotations:
+    prometheus.io/port: '9104'
+    prometheus.io/scrape: "true"
+    
+spec:
+  type: ClusterIP
+  ports:
+    - name: mysql
+      port: 3306
+      targetPort: mysql
+  selector:
+    app: mysql
+    release: bloganalytics
+    component: master
+
+---
+# Source: mysql/templates/master-statefulset.yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: bloganalytics-mysql-master
+  labels:
+    app: mysql
+    chart: mysql-6.10.4
+    release: bloganalytics
+    heritage: Tiller
+    component: master
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+      release: bloganalytics
+      component: master
+  serviceName: bloganalytics-mysql-master
+  replicas: 1
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: mysql
+        chart: mysql-6.10.4
+        release: bloganalytics
+        heritage: Tiller
+        component: master
+    spec:      
+      securityContext:
+        fsGroup: 1001
+        runAsUser: 1001
+      containers:
+        - name: mysql
+          image: docker.io/bitnami/mysql:8.0.19-debian-10-r58
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: BITNAMI_DEBUG
+              value: "false"
+            - name: MYSQL_ROOT_PASSWORD_FILE
+              value: "/opt/bitnami/mysql/secrets/mysql-root-password"
+            - name: MYSQL_USER
+              value: "wordpress"
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bloganalytics-mysql
+                  key: mysql-password
+            - name: MYSQL_DATABASE
+              value: "wordpress_db"
+          ports:
+            - name: mysql
+              containerPort: 3306
+          livenessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
+                  if [ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]; then
+                      password_aux=$(cat $MYSQL_ROOT_PASSWORD_FILE)
+                  fi
+                  mysqladmin status -uroot -p$password_aux
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - |
+                  password_aux="${MYSQL_ROOT_PASSWORD:-}"
+                  if [ -f "${MYSQL_ROOT_PASSWORD_FILE:-}" ]; then
+                      password_aux=$(cat $MYSQL_ROOT_PASSWORD_FILE)
+                  fi
+                  mysqladmin status -uroot -p$password_aux
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 1
+            successThreshold: 1
+            failureThreshold: 3
+          resources:
+            limits: {}
+            requests: {}
+            
+          volumeMounts:
+            - name: data
+              mountPath: /bitnami/mysql
+            - name: config
+              mountPath: /opt/bitnami/mysql/conf/my.cnf
+              subPath: my.cnf
+            - name: mysql-credentials
+              mountPath: /opt/bitnami/mysql/secrets/
+      volumes:
+        - name: config
+          configMap:
+            name: bloganalytics-mysql-master
+        - name: mysql-credentials
+          secret:
+            secretName: bloganalytics-mysql
+            items:
+              - key: mysql-root-password
+                path: mysql-root-password
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+        labels:
+          app: mysql
+          component: master
+          release: bloganalytics
+          heritage: Tiller
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "8Gi"

@@ -1,13 +1,12 @@
+# Karbon Platform Services - DATA PIPELINES - GETTING STARTED GUIDE
 
-# XI IOT - DATA PIPELINES - GETTING STARTED GUIDE
+## Karbon Platform Services Overview
 
-## Xi IoT Overview
-
-The Nutanix Xi IoT platform delivers local compute and AI for IoT edge devices, converging the edge and cloud into one seamless data processing platform. The Xi IoT platform eliminates complexity, accelerates deployments, and elevates developers to focus on the business logic powering IoT applications and services. Now developers can use a low-code development platform to create application software via APIs instead of arduous programming methods.
+The Nutanix Karbon Platform Services platform delivers local compute and AI edge devices, converging the edge and cloud into one seamless data processing platform. The Karbon Platform Services platform eliminates complexity, accelerates deployments, and elevates developers to focus on the business logic powering IoT applications and services. Now developers can use a low-code development platform to create application software via APIs instead of arduous programming methods.
 
 ## Introducing Data Pipelines
 
-The main steps in this guide are excerpts from the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:Xi-IoT-Infra-Admin-Guide), available from the Nutanix Support Portal.
+The main steps in this guide are excerpts from the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:Xi-IoT-Infra-Admin-Guide), available from the Nutanix Support Portal.
 
 Data Pipelines are paths for data that include:
 * **Input**. An existing data source or real-time data stream.
@@ -45,7 +44,7 @@ Each defined data source consists of:
 * Data Extraction - MQTT
 * Categories - MQTT
 
-View these topics in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:Xi-IoT-Infra-Admin-Guide), available from the Nutanix Support Portal.
+View these topics in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:Xi-IoT-Infra-Admin-Guide), available from the Nutanix Support Portal.
 
 ### MQTT Client Samples for Testing
 
@@ -59,8 +58,8 @@ Please refer to [mqtt package](https://www.npmjs.com/package/mqtt) and examples 
 
 Prerequisites
 
-* A Nutanix edge with an IP address onboarded to Xi IoT
-* X509 certificates generated using Xi IoT
+* A Nutanix edge with an IP address onboarded to Karbon Platform Services
+* X509 certificates generated using Karbon Platform Services
 * Python 2.7.10
 * pip 10.0.1 (python 2.7)
 * paho-mqtt. Install it for python 2.7.10 using the following command:
@@ -77,7 +76,7 @@ Below is a simple example that shows how to connect to an mqtt broker, publish a
 # Example code to connect, publish and subscribe from a mqtt client
 # For the example to work:
 # 1. create a dir named 'certs' under $PWD and copy the certs
-#    generated using Xi IoT SaaS Portal.
+#    generated using Karbon Platform Services SaaS Portal.
 # 2. Modify the 'broker_address' variable to point to the edge
 #    ip address that is being used for the tests.
 
@@ -143,11 +142,11 @@ if __name__ == "__main__":
 
 Running the example
 
-1. Download the certificates from Xi IoT and store them locally under certs. directory. Name the files as follows:
+1. Download the certificates from Karbon Platform Services and store them locally under certs. directory. Name the files as follows:
     * ca.crt - Root CA certificate
     * client.crt - client certificate
     * client.key - client private key
-1. Modify broker_address to point to the Xi IoT edge IP address.
+1. Modify broker_address to point to the Karbon Platform Services edge IP address.
 1. Run the example as follows:
 ```console
 $ python2.7 mqtt-example.py
@@ -166,7 +165,7 @@ Message: Hello, World!
 
 A runtime environment is a command execution environment to run applications written in a particular language or associated with a specific Docker registry or file. Each Function added to a Data Pipeline is executed via its own specified Runtime Environment.
 
-Xi IoT includes standard runtime environments including but not limited to the following. These runtimes are read-only and cannot be edited, updated, or deleted by users. They are available to all projects, functions, and associated container registries.
+Karbon Platform Services includes standard runtime environments including but not limited to the following. These runtimes are read-only and cannot be edited, updated, or deleted by users. They are available to all projects, functions, and associated container registries.
 
 * **Golang**
 * **NodeJS**
@@ -247,7 +246,7 @@ The function would produce the following console output when processing images f
 * **ctx.get_config()** - returns a dict of parameters passed to the function.
 * **ctx.get_topic()** - returns the topic (string) on which the current message was received. In this case, it is the topic is set to RTSP topic from which image has been received.
 * **ctx.get_timestamp()** - returns the time in nanoseconds since epoch (Jan 1st, 1970 UTC).
-* **ctx.send()** - Takes bytes as input and forwards it to the next stage in the pipeline. If the input is not of type bytes, an error is thrown and a corresponding alert is raised in Xi IoT.
+* **ctx.send()** - Takes bytes as input and forwards it to the next stage in the pipeline. If the input is not of type bytes, an error is thrown and a corresponding alert is raised in Karbon Platform Services.
 
 **In memory caching**
 ```python
@@ -437,16 +436,16 @@ Packages available in Tensorflow Python 2 Runtime
 
 ### Build a Custom Runtime Environment
 
-You may need a custom runtime for some third party packages or OS distributions (like Linux) which might have dependencies not covered with the built-in Xi IoT runtimes.
+You may need a custom runtime for some third party packages or OS distributions (like Linux) which might have dependencies not covered with the built-in Karbon Platform Services runtimes.
 
-Like the built-in runtime environments, custom runtimes are docker images that can run functions. **A runtime container image must include the Xi IoT language-specific runtime bundle.**
+Like the built-in runtime environments, custom runtimes are docker images that can run functions. **A runtime container image must include the Karbon Platform Services language-specific runtime bundle.**
 
 The bundle’s runtime environment is responsible for:
 
 * Bootstraping the container by downloading the script assigned to that container at runtime
 * Receiving messages and events
 * Providing the API necessary to inspect and forward messages
-* Reporting statistics and alerts to Xi IoT control plane
+* Reporting statistics and alerts to Karbon Platform Services control plane
 
 Nutanix provides custom runtime support for three languages:
 * [**Python 2**](https://s3-us-west-2.amazonaws.com/ntnxsherlock-runtimes/python2-env.tgz)
@@ -505,7 +504,7 @@ $ docker push $DOCKER_REPO/sample-env:v1.1
 ```
 
 **Note**
-Xi IoT edges pull runtime images using an ‘IfNotPresent’ policy. To ensure updates are pulled, tag your container using a specific version and increment it on updates rather than relying on the ‘latest’ tag.
+Karbon Platform Services edges pull runtime images using an ‘IfNotPresent’ policy. To ensure updates are pulled, tag your container using a specific version and increment it on updates rather than relying on the ‘latest’ tag.
 
 **Note**
 Docker Hub, AWS Elastic Container Registry, and GCP Container Registry registries are supported.
@@ -554,13 +553,13 @@ Complete examples of creating custom runtimes:
 * [**NodeJS**](https://github.com/sharvil-kekre/xi-iot/tree/sharvil/how_to/realtime_data_pipeline/nodejs)
 
 ### Creating a Runtime Environment¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Editing a Runtime Environment¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Removing a Runtime Environment¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ## Functions
 
@@ -573,36 +572,36 @@ An infrastructure administrator or project user can create a function, and later
 * Data pipelines can share functions, but you can specify unique parameter values for the function in each data pipeline.
 
 ### Creating a Function¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Editing a Function¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Cloning a Function¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Removing a Function¶
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ## Implementing Data Pipelines
 
 ### Data Pipeline Visualization
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Creating a Data Pipeline
 * Input - Add a Data Source
 * Transformation - Add a Function
 * Output - Add a Destination
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Editing a Data Pipeline
 * Input - Edit a Data Source
 * Transformation - Edit a Function
 * Output - Edit a Destination
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 ### Removing a Data Pipeline
-View this topic in the [Xi IoT Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
+View this topic in the [Karbon Platform Services Infrastructure Admin Guide](https://portal.nutanix.com/page/documents/details/?targetId=Xi-IoT-Infra-Admin-Guide:edg-iot-runtime-create-t.html), available from the Nutanix Support Portal.
 
 **Note**
 See [Appendix](https://nutanix.handsonworkshops.com/workshops/64d8da4f-cdeb-49f6-9722-581e446f6a96/p/#required-cloud-connector-permissions) for external permissions required to publish data via public cloud connectors.
@@ -611,7 +610,7 @@ See [Appendix](https://nutanix.handsonworkshops.com/workshops/64d8da4f-cdeb-49f6
 
 ### Required Cloud Connector Permissions
 
-Xi IoT requires the following permissions from each service to publish output data.
+Karbon Platform Services requires the following permissions from each service to publish output data.
 
 AWS S3
 * s3:ListBucket: Needed for listing of existing buckets and for HEAD Bucket operation.

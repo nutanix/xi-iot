@@ -1,6 +1,6 @@
 # How to build and deploy a custom runtime
 
-Nutanix Xi IoT ships with built-in runtime environments that support scripts designed to run in those environments. However, you might need a custom runtime for some third party packages or OS distributions (like Linux) which might have dependencies not covered with the built-in Xi IoT runtimes.
+Nutanix Karbon Platform Services ships with built-in runtime environments that support scripts designed to run in those environments. However, you might need a custom runtime for some third party packages or OS distributions (like Linux) which might have dependencies not covered with the built-in Karbon Platform Services runtimes.
 
 Like the built-in runtime environments, custom runtimes are docker images that can run scripts.
 A runtime container image must include our language-specific runtime bundle.
@@ -10,7 +10,7 @@ The bundle's runtime environment is responsible for:
 - Bootstrapping the container by downloading the script assigned to that container at runtime
 - Receiving messages and events
 - Providing the API necessary to inspect and forward messages
-- Reporting statistics and alerts to Xi IoT control plane
+- Reporting statistics and alerts to Karbon Platform Services control plane
 
 Nutanix provides custom runtime support for three languages:
 

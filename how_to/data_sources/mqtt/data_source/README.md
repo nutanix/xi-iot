@@ -1,11 +1,11 @@
-# Creating an MQTT datasource in Xi IoT
-MQTT datasource in Xi IoT enables a data pipeline to receive data from any
+# Creating an MQTT datasource in Karbon Platform Services
+MQTT datasource in Karbon Platform Services enables a data pipeline to receive data from any
 device that can send MQTT messages. An example of such a device would be an
-industrial sensor or gateway that wants to publish data to a Xi IoT edge for
+industrial sensor or gateway that wants to publish data to a Karbon Platform Services edge for
 processing data in a pipeline.
 
 ### Steps
-Go to `Data Source` page in Xi IoT and click on `Add Data Source`. Creating a datasource
+Go to `Data Source` page in Karbon Platform Services and click on `Add Data Source`. Creating a datasource
 involves 3 distinct steps.  
 
 **1. General**

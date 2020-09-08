@@ -10,83 +10,32 @@ Services are enabled per project to be consumed by Pipelines and Kubernetes Appl
 
 A sophisticated data service like Kafka has many config options which a user might want to change from their default values. We allow various settings to be tuned for throughput, latency, availability or durability reasons. We treat all Kafka brokers as equals. That is all brokers will have same configuration settings.
 
-You can configure services by using the project service API. The CLI supports this API which we'll demonstrate shortly. 
+You can configure Kafka by using the common service API. The CLI supports this API which we'll demonstrate shortly. 
 
 ### A simple Kafka instance with default settings
-
-Let's setup Kafka service with default settings:
-
-```
-kind: service
-name: Kafka
-project: KafkaTest
-```
-
-The service name must be Kafka, as we only support a single Kafka instance within a project. In that sense name is equal to type of service requested.
-We automatically size the number of Kafka brokers to be equal to number of nodes in Service Domain. The Kafka cluster size adjusts if a node is added or removed.
 
 The service can be instantiated using CLI as follows:
 
 ```
-$ xi-iot create -f kafka-with-defaults.yaml
+# Enable Kafka service in project "MyProject"
+$ kps service enable kafka -p MyProject
+# Disable Kafka service in project "MyProject"
+$ kps service disable kafka -p KafkaTest
 ```
 
-We can query back service instance in project Kafka:
+### A Kafka instance with custome settings
 
 ```
-xi-iot get service -p KafkaTest Kafka -o yaml
-kind: service
-name: Kafka
-project: KafkaTest
-serviceYaml: |
-  null
-```
-
-You can see serviceYaml property which is null in config. That means default configuration is used. The YAML configuring Kafka is embedded into service config. 
-
-You can update the configuration after creating it. Depending on the updates, Kafka cluster availability might be affected.
-
-```
-$ xi-iot update -f changed-kafka-config.yaml
-```
-
-If you no longer require the Kafka data service, you can delete it from the project.
-
-```
-$ xi-iot delete service -p KafkaTest Kafka
+# Configuration parameters in YAML format
+$ cat kafka.yaml
+nodePort: 32093
+logRetentionHours: 1
+kafkaVolumeSize: 60Gi
+# Enable Kafka service in project “MyProject”
+$ kps service enable kafka -f kafka.yaml -p MyProject
 ```
 
 Of course, deleting the service might affect running applications and data pipelines.
-
-### A Kafka instance with non-default settings
-
-Here is a more complex YAML snippet where we configure the Kafka data service:
-
-```
-kind: service
-name: Kafka
-project: KafkaTest
-serviceYaml: |
-  apiVersion: sherlock.nutanix.com/v1
-  kind: Kafka
-  metadata:
-    name: kafka
-  spec:
-    # Expose Kafka on node port 32092
-    nodePort: 32092
-    # Retain 1 megabyte
-    logRetentinBytes: 1000000
-    # Give each Kafka broker 4G of memory.
-    kafkaMemory: 4G
-    # Allocate 2 CPU cores for each Kafka broker.
-    kafkaCPU: 2000m
-    # Give each Zookeeper node 2G of memory.
-    zookeeperMemory: 2G
-    # Allocate 0.6 CPU cores for each ZK node.
-    zookeeperCPU: 600m
-    # Allocate 500GB storage for each Kafka broker.
-    kafkaVolumeSize: 500Gi
-```
 
 ## Access Kafka Data Service from Pipelines
 
@@ -164,47 +113,20 @@ This app YAML starts Kafdrop, a Kafka UI on any Service Domain.
 
 External clients must specify a list of Kafka brokers (IP:port) as usual for Kafka clients. We publish list of Kafka endpoints in UI.
 
-To see externally exposed Kafka brokers for your project: From the Projects page in the Xi IoT cloud management console, click your project name. Open Data Services > Kafka and click the Deployments tab.
+To see externally exposed Kafka brokers for your project: From the Projects page in the Karbon Platform Services cloud management console, click your project name. Open Data Services > Kafka and click the Deployments tab.
 
 ## Kafka settings
 
 Following is a list of all settings and their defaults values. Change config default settings with caution since those affect availability and durability of Kafka data.
 
 ```
-autoCreateTopicsEnable: true
-defaultReplicationFactor: 2
-deleteTopicEnable: true
-kafkaCPU: 500m
-kafkaMemory: 512M
+nodePort: 0 (must be valid k8s node port 30000-32767 or 0)
 kafkaVolumeSize: 6Gi
-logFlushIntervalMS: 30000
-logFlushIntervalMessages: 9223372036854775807
-logFlushOffsetCheckpointIntervalMS: 60000
-logFlushSchedulerIntervalMS: 9223372036854775807
-logRetentionBytes: -1
-logRetentionHours: 168
-logRollHours: 168
-logSegmentBytes: 1073741824
-logSegmentDeleteDelayMS: 60000
-messageMaxBytes: 52428800
-minInsyncReplicas: 2
-numPartitions: 6
-numReplicaFetchers: 1
-offsetsLoadBufferSize: 5242880
-offsetsMetadataMaxBytes: 4096
-offsetsRetentionCheckIntervalMS: 600000
-offsetsTopicNumPartitions: 6
-offsetsTopicReplicationFactor: 2
-offsetsTopicRetentionMinutes: 1440
-offsetsTopicSegmentBytes: 104857600
-replicaFetchMaxBytes: 52428800
-replicaFetchMinBytes: 1
-replicaFetchWaitMaxMS: 500
-replicaHighWatermarkCheckpointIntervalMS: 5000
-replicaLagTimeMaxMS: 10000
-uncleanLeaderElectionEnable: false
-zookeeperCPU: 500m
-zookeeperMemory: 512M
-zookeeperReplicationFactor: 3
 zookeeperVolumeSize: 2Gi
+kafkaMemory: 512M
+zookeeperMemory: 512M
+kafkaCPU: 500m
+zookeeperCPU: 500m
+logRetentionHours: 168
+logRetentionBytes: -1
 ```

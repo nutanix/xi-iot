@@ -1,4 +1,4 @@
-# Note: This sample requires a Xi IoT cloud instance or deployments. See https://www.nutanix.com/products/iot
+# Note: This sample requires a Karbon Platform Services for IoT cloud instance or deployments. See https://www.nutanix.com/products/iot
 kind: application
 name: echo-ifc-app
 description: echo app

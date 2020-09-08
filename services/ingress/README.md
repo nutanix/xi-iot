@@ -8,49 +8,29 @@ For ingress to route external HTTP traffic an ingress controller must be instant
 
 We support two types of ingress controllers:
 
-1. Traefik (default)
+1. Traefik
 2. ingress-nginx
 
-By default Traefik ingress controller is enabled on demand whenever an application requires ingress. NGINX can be used alternatively.
+Both types of ingress controller are managed and configured through our common service model.
 
 ## Choice of Ingress Controllers
 
-Admins are free to choose ingress-nginx over Traefik if applications require that particular ingress controller.
+Admins are free to choose ingress-nginx or Traefik if applications require that particular ingress controller.
 
-Ingress controllers are configured per Service Domain. You can use the xi-iot CLI to update an active ingress controller on a service domain:
+Ingress controllers can be enabled on a per project basis. However since ingress controller binds to host port 80, 443 and in case of Traefik 8081, there can only be one type of ingress controller deployed on a service domain. Alerts will be raised for conflicting ingress controller types across projects on same service doamin.
+You can use the kps CLI to enable or disable an active ingress controller on a project. This is similar to the workflow in the UI:
 
-Switch from default ingress controller Traefik to ingress-nginx
-
-```
-$ xi-iot update svcdomain my-service-domain --ingress-type=NGINX
-Successfully updated service domain: my-service-domain
-```
-
-Switch back to Traefik
+Enable ingress controller Traefik in project MyProject
 
 ```
-$ xi-iot update svcdomain my-service-domain --ingress-type=Traefik
-Successfully updated service domain: my-service-domain
+$ kps service enable traefik -p MyProject
 ```
 
-Check which ingress controller is currently used:
+Switch to ingress-nginx
 
 ```
-$ xi-iot get svcdomain my-service-domain -o yaml
-kind: edge
-name: my-service-domain
-connected: true
-categorySelectors:
-  TestEdgeCategory:
-  - TEST_CATEGORY
-profile:
-  privileged: false
-  enableSSH: false
-  ingressType: Traefik
-effectiveProfile:
-  privileged: false
-  enableSSH: false
-  ingressType: Traefik
+$ kps service disable traefik -p MyProject
+$ kps service enable ingress-nginx -p MyProject
 ```
 
 Note: Changing ingress controller might affect running applications if ingress routes have already been configured.
@@ -201,4 +181,4 @@ spec:
 
 ## Access Services via Ingress
 
-For the chosen ingress controller, both HTTP port 80 and HTTPS port 443 are open and listening for ingress traffic on all nodes in cluster.
+For the chosen ingress controller, both HTTP port 80 and HTTPS port 443 are open and listening for ingress traffic on all nodes in cluster. In case of Traefik port 8081 is open as well to give access to Traefik dashboard.

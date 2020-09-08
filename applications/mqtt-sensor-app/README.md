@@ -9,14 +9,14 @@ to the local Xi Edge where it is running. It can be used to test data pipeline t
 
 ## Getting it up and running
 
-1. Via the Xi IoT Management Console, create a new MQTT Data Source.
+1. Via the Karbon Platform Services Management Console, create a new MQTT Data Source.
     - Choose Associated Infrastructure (Edge) (This is the same edge where the MQTT Sensor app will run).
     - Generate & download its certificates.
     - Add a new field and assign the MQTT topic.
     - Add any required data source categories to the field.
 2. Base-64 encode the certificate bundle (zip) downloaded in step 1.
     - ```base64 -i 1561481707433_certificates.zip```
-3. Via the Xi Iot Management Console create a new Application within the same Project to which the Associated Infrastructure (Edge) in step 1 is also assigned.
+3. Via the Karbon Platform Services Management Console create a new Application within the same Project to which the Associated Infrastructure (Edge) in step 1 is also assigned.
     - Choose the same Associated Infrastructure (Edge) from step 1.
     - Import the mqtt-sensor-app.yaml and modify the below environment variables as needed.
 

@@ -1,0 +1,5 @@
+msgpack
+numpy
+tensorflow==2.1.0
+requests
+paho-mqtt

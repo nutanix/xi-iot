@@ -1,0 +1,212 @@
+---
+# Source: wordpress/templates/externaldb-secrets.yaml
+
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bloganalytics-externaldb
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+type: Opaque
+data:
+  mariadb-password: "d29yZHByZXNz"
+
+---
+# Source: wordpress/templates/secrets.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: bloganalytics-wordpress
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+type: Opaque
+data:
+  wordpress-password: "d29yZHByZXNz"
+
+---
+# Source: wordpress/templates/pvc.yaml
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: bloganalytics-wordpress
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  accessModes:
+    - "ReadWriteOnce"
+  resources:
+    requests:
+      storage: "10Gi"
+  
+
+---
+# Source: wordpress/templates/svc.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: bloganalytics-wordpress
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+    - name: https
+      port: 443
+      targetPort: https
+  selector:
+    app.kubernetes.io/name: wordpress
+    app.kubernetes.io/instance: bloganalytics
+
+---
+# Source: wordpress/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bloganalytics-wordpress
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: wordpress
+      app.kubernetes.io/instance: bloganalytics
+  strategy: 
+    type: RollingUpdate
+    
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: wordpress
+        helm.sh/chart: wordpress-9.0.4
+        app.kubernetes.io/instance: bloganalytics
+        app.kubernetes.io/managed-by: Tiller
+    spec:      
+      hostAliases:
+        - ip: "127.0.0.1"
+          hostnames:
+            - "status.localhost"
+      securityContext:
+        runAsUser: 1001
+        fsGroup: 1001
+      containers:
+        - name: wordpress
+          image: docker.io/bitnami/wordpress:5.3.2-debian-10-r48
+          imagePullPolicy: "IfNotPresent"
+          env:
+            - name: ALLOW_EMPTY_PASSWORD
+              value: "yes"
+            - name: MARIADB_HOST
+              value: "bloganalytics-mysql"
+            - name: MARIADB_PORT_NUMBER
+              value: "3306"
+            - name: WORDPRESS_DATABASE_NAME
+              value: "wordpress_db"
+            - name: WORDPRESS_DATABASE_USER
+              value: "wordpress"
+            - name: WORDPRESS_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bloganalytics-externaldb
+                  key: mariadb-password
+            - name: WORDPRESS_USERNAME
+              value: "user"
+            - name: WORDPRESS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: bloganalytics-wordpress
+                  key: wordpress-password
+            - name: WORDPRESS_EMAIL
+              value: "user@example.com"
+            - name: WORDPRESS_FIRST_NAME
+              value: "FirstName"
+            - name: WORDPRESS_LAST_NAME
+              value: "LastName"
+            - name: WORDPRESS_HTACCESS_OVERRIDE_NONE
+              value: "no"
+            - name: WORDPRESS_BLOG_NAME
+              value: "User's Blog!"
+            - name: WORDPRESS_SKIP_INSTALL
+              value: "no"
+            - name: WORDPRESS_TABLE_PREFIX
+              value: "wp_"
+            - name: WORDPRESS_SCHEME
+              value: "http"
+          ports:
+            - name: http
+              containerPort: 8080
+            - name: https
+              containerPort: 8443
+          livenessProbe:
+            initialDelaySeconds: 120
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+            httpGet:
+              path: /wp-login.php
+              port: http
+          readinessProbe:
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            successThreshold: 1
+            failureThreshold: 6
+            httpGet:
+              path: /wp-login.php
+              port: http
+          volumeMounts:
+            - mountPath: /bitnami/wordpress
+              name: wordpress-data
+              subPath: wordpress
+          resources:
+            limits: {}
+            requests:
+              cpu: 300m
+              memory: 512Mi
+            
+      volumes:
+        - name: wordpress-data
+          persistentVolumeClaim:
+            claimName: bloganalytics-wordpress
+
+---
+# Source: wordpress/templates/ingress.yaml
+
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: bloganalytics-wordpress
+  labels:
+    app.kubernetes.io/name: wordpress
+    helm.sh/chart: wordpress-9.0.4
+    app.kubernetes.io/instance: bloganalytics
+    app.kubernetes.io/managed-by: Tiller
+spec:
+  rules:
+    - host: bloganalytics.karbon.nutanix.com
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: bloganalytics-wordpress
+              servicePort: http
